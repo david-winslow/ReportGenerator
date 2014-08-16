@@ -13,16 +13,27 @@ namespace OTS.Tests
 {
     public class WordGeneratorTests
     {
-      
+        private string _fileName = @"c:\googledrive\testing\templates\report.docx";
+
 
         [Test]
         public void ShouldExecuteAllReportElements()
         {
-            var path = @"c:\googledrive\testing\templates\report.docx";
-            File.Delete(path);
+           
+            File.Delete(_fileName);
             ReportGenerator.Process();
-            Process.Start(path);
+            
+            Process.Start(_fileName);
          }
+
+
+        [Test]
+        public void test()
+        {
+            IoC.Get<Background>().Execute();
+            Process.Start(_fileName);
+        }
+
     }
 
 

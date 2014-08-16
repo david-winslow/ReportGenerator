@@ -12,7 +12,7 @@ namespace OTS
         public void Execute()
         {
             _word.RemoveTemplaterLicenseSection();
-
+            
         }
 
         public int OrderIndex {

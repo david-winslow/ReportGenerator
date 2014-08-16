@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Remotion.Data.Linq.Clauses;
 
 namespace OTS
 {
@@ -28,7 +29,7 @@ namespace OTS
                             OurRef = e["B15"],
                             YourRef = e["B16"],
                             Title = e["B17"],
-                            PeoplePresent = BuildPeoplePresent()
+                            PeoplePresent = BuildPeoplePresent(),Counter.I
                         };
             }
         }
@@ -54,7 +55,7 @@ namespace OTS
 
         protected override string SectionName
         {
-            get { return "AssessmentInformation"; }
+            get { return "Assessment Information"; }
         }
 
         public override int OrderIndex

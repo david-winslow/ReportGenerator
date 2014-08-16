@@ -10,7 +10,7 @@ namespace OTS
             var result = from element in IoC.GetElements()
                 orderby element.OrderIndex ascending
                 select element;
-            result.ForEach(e => e.Execute());
+            result.ToList().ForEach(e => e.Execute());
         }
     }
 }

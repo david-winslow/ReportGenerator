@@ -13,6 +13,7 @@ namespace OTS
         public virtual void Execute()
         {
             Excel.DefaultWorkSheetIndex = OrderIndex;
+            Excel.DefaultWorkSheetName = SectionName;
             Word.InsertSection(GetSectionPath(SectionName, "", ""));
             Word.Replace(ReportData(Excel));
         }

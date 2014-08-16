@@ -44,6 +44,7 @@ namespace OTS
         public void RemoveTemplaterLicenseSection()
         {
             _document.Sections[0].Remove();
+            _document.UpdateFields();
             Save();
         }
 

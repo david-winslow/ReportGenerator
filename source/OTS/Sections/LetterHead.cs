@@ -15,7 +15,7 @@ namespace OTS
                         FirstName = e["B2"],
                         LastName = e["B3"],
                         Cell = e["B4"],
-                        Email = e["B5"],
+                        Email = e["B5"]
                     };
             }
         }
