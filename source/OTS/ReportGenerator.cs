@@ -7,6 +7,8 @@ namespace OTS
     {
         public static void Process()
         {
+            
+
             var result = from element in IoC.GetElements()
                 orderby element.OrderIndex ascending
                 select element;

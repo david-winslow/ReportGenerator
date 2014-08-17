@@ -13,28 +13,39 @@ namespace OTS.Tests
 {
     public class WordGeneratorTests
     {
-        private string _fileName = @"c:\googledrive\testing\templates\report.docx";
 
-
+        Config config;
         [Test]
         public void ShouldExecuteAllReportElements()
         {
-           
-            File.Delete(_fileName);
+            File.Delete(config.WordReportFile);
             ReportGenerator.Process();
-            
-            Process.Start(_fileName);
+            Process.Start(config.WordReportFile);
          }
+
+        [TestFixtureSetUp]
+        public void Setup()
+        {
+            var bootStrapper = new BootStrapper();
+            config = new Config()
+            {
+                WordTemplateFile = @"c:\googledrive\testing\templates\template.docx",
+                WordReportFile = @"c:\googledrive\testing\templates\report.docx",
+                ExcelInputFile = "input.xlsx",
+                WordSectionsPath = @"c:\googledrive\testing\templates\Sections",
+            };
+            bootStrapper.Initialize(config);
+        }
 
 
         [Test]
         public void test()
         {
             IoC.Get<Background>().Execute();
-            Process.Start(_fileName);
+            Process.Start(config.WordReportFile);
         }
 
     }
 
-
+    
 }

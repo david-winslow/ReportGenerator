@@ -9,15 +9,16 @@ namespace OTS
 {
     public class Excel
     {
-        public static string EXCELPATH = "input.xlsx";
+        private readonly string _inputFile;
         private static Workbook _workbook;
         public int DefaultWorkSheetIndex = 0;
         private ExcelQueryFactory _linq2Excel;
         public string DefaultWorkSheetName;
-        public Excel()
+        public Excel(string inputFile)
         {
-            _workbook = new Workbook(EXCELPATH);
-            _linq2Excel = new ExcelQueryFactory(EXCELPATH);
+            _inputFile = inputFile;
+            _workbook = new Workbook(inputFile);
+            _linq2Excel = new ExcelQueryFactory(inputFile);
             _linq2Excel.StrictMapping = StrictMappingType.None;
         }
 
@@ -25,7 +26,6 @@ namespace OTS
         {
             return from p in _linq2Excel.WorksheetRange<T>(start, end, DefaultWorkSheetName)
                     select p;
-
         }
 
         public string this[string name]

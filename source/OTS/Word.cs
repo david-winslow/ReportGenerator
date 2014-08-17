@@ -4,24 +4,24 @@ namespace OTS
 {
     public class Word
     {
-        public static string WORDTEMPLATEPATH = @"c:\googledrive\testing\templates\template.docx";
-        public static string WORDREPORTPATH = @"c:\googledrive\testing\templates\report.docx";
+        private readonly string _reportFile;
         private Document _document;
 
-        public Word()
+        public Word(string templateFile,string reportFile)
         {
-            _document = new Document(WORDTEMPLATEPATH);
+            _reportFile = reportFile;
+            _document = new Document(templateFile);
             Save();
         }
 
         public void Replace<T>(T reportData)
 
         {
-            using (var templateDocument = NGS.Templater.Configuration.Factory.Open(WORDREPORTPATH))
+            using (var templateDocument = NGS.Templater.Configuration.Factory.Open(_reportFile))
             {
                 templateDocument.Process(reportData);
             }
-            _document = new Document(WORDREPORTPATH);
+            _document = new Document(_reportFile);
             Save();
         }
 
@@ -44,13 +44,12 @@ namespace OTS
         public void RemoveTemplaterLicenseSection()
         {
             _document.Sections[0].Remove();
-            _document.UpdateFields();
             Save();
         }
 
         private void Save()
         {
-            _document.Save(WORDREPORTPATH);
+            _document.Save(_reportFile);
         }
     }
 }
