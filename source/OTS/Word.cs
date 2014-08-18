@@ -1,3 +1,4 @@
+using System;
 using Aspose.Words;
 
 namespace OTS
@@ -50,6 +51,11 @@ namespace OTS
         private void Save()
         {
             _document.Save(_reportFile);
+        }
+        public void UpdateWordDocument(Action<Document> applyAction )
+        {
+            applyAction(_document);
+            Save();
         }
     }
 }

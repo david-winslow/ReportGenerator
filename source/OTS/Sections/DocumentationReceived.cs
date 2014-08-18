@@ -57,7 +57,7 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return e => new { Doc = e.Get<Doc>("A1", "C8"), Counter.I }; }
+            get { return e => new { Doc = e.Get<Doc>("A1", "C40"), Counter.I }; }
         }
     }
 }

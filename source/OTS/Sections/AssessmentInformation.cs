@@ -24,7 +24,7 @@ namespace OTS
                             Location = "554 Louis Botha Ave, Gresswold, Johannesburg",
                             Language = e["B9"],
                             ReportDate = DateTime.Now.ToString("dd MMMM yyyy"),
-                            Duration = string.Format("{0}.{1} Hours", e["B11"], e["B12"]),
+                            Duration = BuildDuration(),
                             RefCompany = e["B13"],
                             RefAssessor = e["B14"],
                             OurRef = e["B15"],
@@ -35,10 +35,19 @@ namespace OTS
             }
         }
 
+        private string BuildDuration()
+        {
+            int minutes = Excel.Cell(SectionName, "B12").IntValue;
+            int hours = Excel.Cell(SectionName, "B11").IntValue;
+
+            return (minutes == 0) ? string.Format("{0} hours", hours) :
+            string.Format("{0} hours and {1} minutes", hours, minutes);
+        }
+
         private string BuildPeoplePresent()
         {
             StringBuilder sb = new StringBuilder();
-            string therapist = string.Format("{0} {1} (Occupational Therapist) ", Excel.Cell(SectionName, "B2").StringValue,Excel.Cell(SectionName, "B3").StringValue);
+            string therapist = string.Format("{0} {1} (Occupational Therapist) ", Excel.Cell("Configuration", "B2").StringValue,Excel.Cell("Configuration", "B3").StringValue);
             string client = string.Format("{0} (Client) ", Excel.Cell(SectionName, "B2").StringValue);
             sb.AppendLine(therapist);
             sb.AppendLine(client);
