@@ -1,4 +1,5 @@
 using System;
+using System.Net.Sockets;
 using System.Text;
 using Remotion.Data.Linq.Clauses;
 
@@ -15,11 +16,11 @@ namespace OTS
                         new
                         {
                             ClientName = e["B2"],
-                            IDNumber = e.Cell(OrderIndex,"B3").DoubleValue,
-                            Age = GetAge(e.Cell(OrderIndex, "B3").DoubleValue),
+                            IDNumber = e.Cell(SectionName,"B3").DoubleValue,
+                            Age = GetAge(e.Cell(SectionName, "B3").DoubleValue),
                             Address = e["B5"],
                             ContactNumber = e["B6"],
-                            AssessmentDate = e.Cell(OrderIndex, "B7").DateTimeValue.ToString("dd MMMM yyyy"),
+                            AssessmentDate = e.Cell(SectionName, "B7").DateTimeValue.ToString("dd MMMM yyyy"),
                             Location = "554 Louis Botha Ave, Gresswold, Johannesburg",
                             Language = e["B9"],
                             ReportDate = DateTime.Now.ToString("dd MMMM yyyy"),
@@ -37,8 +38,8 @@ namespace OTS
         private string BuildPeoplePresent()
         {
             StringBuilder sb = new StringBuilder();
-            string therapist = string.Format("{0} {1} (Occupational Therapist) ", Excel.Cell(0, "B2").StringValue,Excel.Cell(0, "B3").StringValue);
-            string client = string.Format("{0} (Client) ", Excel.Cell(1, "B2").StringValue);
+            string therapist = string.Format("{0} {1} (Occupational Therapist) ", Excel.Cell(SectionName, "B2").StringValue,Excel.Cell(SectionName, "B3").StringValue);
+            string client = string.Format("{0} (Client) ", Excel.Cell(SectionName, "B2").StringValue);
             sb.AppendLine(therapist);
             sb.AppendLine(client);
             return sb.ToString();
@@ -58,9 +59,6 @@ namespace OTS
             get { return "Assessment Information"; }
         }
 
-        public override int OrderIndex
-        {
-            get { return 1; }
-        }
+       
     }
 }

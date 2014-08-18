@@ -11,10 +11,7 @@ namespace OTS
             get { return "Purposes"; }
         }
 
-        public override int OrderIndex
-        {
-            get { return 2; }
-        }
+        
 
         public override Func<Excel, object> ReportData
         {

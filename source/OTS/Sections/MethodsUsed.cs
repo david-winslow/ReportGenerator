@@ -9,10 +9,7 @@ namespace OTS
             get { return "Methods used"; }
         }
 
-        public override int OrderIndex
-        {
-            get { return 3; }
-        }
+    
 
         public override Func<Excel, object> ReportData
         {

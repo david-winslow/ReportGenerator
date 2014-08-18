@@ -17,10 +17,7 @@ namespace OTS
             get { return "Background"; }
         }
 
-        public override int OrderIndex
-        {
-            get { return 6; }
-        }
+       
 
         public override Func<Excel, object> ReportData
         {
@@ -49,47 +46,14 @@ namespace OTS
     }
 
 
-    public class MedicalInformation : Section
-    {
-        private class MedicalData
-        {
-            public DateTime? Date { get; set; }
-            public string History { get; set; }
-        }
-
-        private class BodyCheck
-        {
-            public string System { get; set; }
-            public string Result { get; set; }
-        }
-
-        protected override string SectionName
-        {
-            get { return "Medical Information"; }
-        }
-
-        public override int OrderIndex
-        {
-            get { return 5; }
-        }
-
-        public override Func<Excel, object> ReportData
-        {
-            get { return e => new { MedicalData = e.Get<MedicalData>("A1", "B20"), Counter.I, BodyCheck = e.Get<BodyCheck>("D1", "E8") }; }
-        }
-    }
-
-    public class DocsReceived : Section
+    public class DocumentationReceived : Section
     {
         protected override string SectionName
         {
             get { return "Documentation Received"; }
         }
 
-        public override int OrderIndex
-        {
-            get { return 4; }
-        }
+    
 
         public override Func<Excel, object> ReportData
         {

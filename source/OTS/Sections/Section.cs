@@ -46,7 +46,6 @@ namespace OTS
 
         public virtual void Execute()
         {
-            Excel.DefaultWorkSheetIndex = OrderIndex;
             Excel.DefaultWorkSheetName = SectionName;
             Word.InsertSection(_sectionFileLocator.GetSectionPath(SectionName, "", ""));
             Word.Replace(ReportData(Excel));
@@ -55,7 +54,6 @@ namespace OTS
 
       
 
-        public abstract int OrderIndex { get;}
 
         public Word Word { get; set; }
         public Excel Excel { get; set; }

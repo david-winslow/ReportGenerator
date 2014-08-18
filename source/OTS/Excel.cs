@@ -30,12 +30,12 @@ namespace OTS
 
         public string this[string name]
         {
-            get { return Cell(DefaultWorkSheetIndex, name).StringValue; }
+            get { return Cell(DefaultWorkSheetName, name).StringValue; }
         }
 
-        public Cell Cell(int workSheetIndex, string name)
+        public Cell Cell(string workSheetName, string name)
         {
-            return _workbook.Worksheets[workSheetIndex].Cells[name];
+            return _workbook.Worksheets[workSheetName].Cells[name];
         }
     }
 

@@ -7,12 +7,16 @@ namespace OTS
     {
         public static void Process()
         {
-            
-
-            var result = from element in IoC.GetElements()
-                orderby element.OrderIndex ascending
-                select element;
-            result.ToList().ForEach(e => e.Execute());
+            var fileService = IoC.Get<IFileService>();
+            if (fileService.HasFileToProcess())
+            {
+                fileService.ProcessFile();
+                var result = from element in IoC.GetAll<IReportElement>()
+                    select element;
+                result.ToList().ForEach(e => e.Execute());
+            }
         }
     }
+
+   
 }

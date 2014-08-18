@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.Core;
+using Castle.Core.Internal;
+using Castle.MicroKernel.Registration;
 using Moq;
 using NUnit.Framework;
 using Should;
@@ -13,6 +16,8 @@ namespace OTS.Tests
 {
     public class WordGeneratorTests
     {
+        
+
 
         Config config;
         [Test]
@@ -29,12 +34,12 @@ namespace OTS.Tests
             var bootStrapper = new BootStrapper();
             config = new Config()
             {
-                WordTemplateFile = @"c:\googledrive\testing\templates\template.docx",
-                WordReportFile = @"c:\googledrive\testing\templates\report.docx",
+                WordTemplateFile = @"c:\googledrive\templates\template.docx",
+                WordReportFile = @"c:\googledrive\templates\report.docx",
                 ExcelInputFile = "input.xlsx",
-                WordSectionsPath = @"c:\googledrive\testing\templates\Sections",
+                WordSectionsPath = @"c:\googledrive\templates\Sections",
             };
-            bootStrapper.Initialize(config);
+            bootStrapper.Initialize(config, Component.For(typeof(IFileService)).ImplementedBy(typeof(TestFileService)));
         }
 
 
@@ -47,5 +52,16 @@ namespace OTS.Tests
 
     }
 
-    
+    public class TestFileService : IFileService
+    {
+        public bool HasFileToProcess()
+        {
+            return true;
+        }
+
+        public void ProcessFile()
+        {
+            
+        }
+    }
 }

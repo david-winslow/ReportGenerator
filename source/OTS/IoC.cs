@@ -8,12 +8,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Castle.Core.Internal;
-using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using OTS;
-using Component = Castle.MicroKernel.Registration.Component;
+using Remotion.Logging;
 using License = Aspose.Words.License;
 
 namespace OTS
@@ -29,57 +27,21 @@ namespace OTS
         public string WordExtension { get; set; }
     }
 
-    public class BootStrapper
-    {
-        private static void SetLicenses()
-        {
-            new Aspose.Words.License().SetLicense(typeof(IoC).Assembly.GetManifestResourceStream("OTS.x.lic"));
-            new Aspose.Cells.License().SetLicense(typeof(IoC).Assembly.GetManifestResourceStream("OTS.x.lic"));
-        }
-
-        public void Initialize(Config config,params ComponentRegistration[] components)
-        {
-            SetLicenses();
-            WindsorContainer container = new WindsorContainer();
-            container.Register(Component.For<Excel>()
-                .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("inputFile", config.ExcelInputFile)));
-
-            container.Register(Component.For<Word>()
-                    .LifestyleSingleton()
-                    .DependsOn(Dependency.OnValue("templateFile", config.WordTemplateFile))
-                    .DependsOn(Dependency.OnValue("reportFile", config.WordReportFile)));
-
-            container.Register(Component.For<SectionFileLocator>()
-                .LifestyleSingleton()
-                .DependsOn(Dependency.OnValue("wordSectionsPath", config.WordSectionsPath)));
-
-
-            container.Register(Classes.FromAssemblyNamed("OTS")
-                .Where(type => type.Is<IReportElement>())
-                .WithService.AllInterfaces()
-                .WithServiceSelf()
-                .LifestyleTransient());
-            IoC._container = container;
-        }
-    }
-
     public static class IoC
     {
 
         internal static WindsorContainer _container;
 
-      
-
-        public static IEnumerable<IReportElement> GetElements()
-        {
-           return _container.ResolveAll<IReportElement>();
-        }
-
         public static T Get<T>()
         {
             return _container.Resolve<T>();
         }
+
+        public static IEnumerable<T> GetAll<T>()
+        {
+            return _container.ResolveAll<T>();
+        }
+
     }
 
   

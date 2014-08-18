@@ -25,8 +25,6 @@ namespace OTS
             get { return "LetterHead"; }
         }
 
-        public override int OrderIndex {
-            get { return 0; }
-        }
+       
     }
 }
