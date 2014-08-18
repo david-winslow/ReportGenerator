@@ -41,6 +41,10 @@
     <Reference Include="Moq">
       <HintPath>..\OTS\packages\Moq.4.2.1408.0717\lib\net40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\OTS\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NGS.Templater, Version=1.9.2.37948, Culture=neutral, PublicKeyToken=b9c117a1d2974457, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\OTS\packages\Templater.1.9.2\lib\Net40\NGS.Templater.dll</HintPath>
@@ -69,6 +73,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="TestSpreadSheet_final.gsheet">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OTS\OTS.csproj">

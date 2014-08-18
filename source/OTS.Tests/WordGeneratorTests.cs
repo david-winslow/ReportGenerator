@@ -9,6 +9,7 @@ using Castle.Core;
 using Castle.Core.Internal;
 using Castle.MicroKernel.Registration;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Should;
 
@@ -50,6 +51,28 @@ namespace OTS.Tests
             Process.Start(config.WordReportFile);
         }
 
+        [Test]
+        public void ShouldDetectFileWithPattern()
+        {
+            string pattern = "_final";
+            FileInfo[] files = new DirectoryInfo(".").GetFiles(string.Format("*{0}.gsheet", pattern));
+            files.ToList().First().Name.ShouldEqual("TestSpreadSheet_final.gsheet");
+        }
+
+        [Test]
+        public void ShouldPullIdFromLocalGoogleSpreadsheet()
+        {
+            using (FileStream fs = new FileStream("TestSpreadSheet_final.gsheet", FileMode.Open, FileAccess.Read))
+            {
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    string jsonString = sr.ReadToEnd();
+                    var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<LocalGSheet>(jsonString);
+                    string id = obj.resource_id.Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries)[1];
+                    id.ShouldEqual("1d5BwM0Iir9JlnpglFSJTtC319ZyANp8DTAdzn3JxEAU");
+                }
+            }
+        }
     }
 
     public class TestFileService : IFileService
@@ -63,5 +86,13 @@ namespace OTS.Tests
         {
             
         }
+    }
+
+    public class LocalGSheet
+    {
+        [JsonProperty("url")]
+        public string url { get; set; }
+        [JsonProperty("resource_id")]
+        public string resource_id { get; set; }
     }
 }
