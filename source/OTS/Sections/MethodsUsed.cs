@@ -17,7 +17,7 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return excel => new {List = Excel.SelectedValuesList("I2", "J31")}; }
+            get { return excel => new {List = Excel.SelectedValuesList("I2", "J31"),Counter.I}; }
         }
     }
 }
