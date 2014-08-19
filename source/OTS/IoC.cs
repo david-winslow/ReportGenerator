@@ -16,20 +16,8 @@ using License = Aspose.Words.License;
 
 namespace OTS
 {
-  
-
-    public class Config
-    {
-        public string WordReportFile { get; set; }
-        public string WordTemplateFile { get; set; }
-        public string ExcelInputFile { get; set; }
-        public string WordSectionsPath { get; set; }
-        public string WordExtension { get; set; }
-    }
-
     public static class IoC
     {
-
         internal static WindsorContainer _container;
 
         public static T Get<T>()
@@ -41,8 +29,5 @@ namespace OTS
         {
             return _container.ResolveAll<T>();
         }
-
     }
-
-  
 }

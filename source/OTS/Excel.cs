@@ -45,6 +45,4 @@ namespace OTS
             select v;
         }
     }
-
- 
 }

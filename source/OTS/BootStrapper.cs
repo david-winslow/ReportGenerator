@@ -53,8 +53,7 @@ namespace OTS
             container.Register(Component.For<IReportElement>().ImplementedBy<Cam>().LifestyleTransient().Forward<Cam>());
             container.Register(Component.For<IReportElement>().ImplementedBy<BNCE>().LifestyleTransient().Forward<BNCE>());
             container.Register(Component.For<IReportElement>().ImplementedBy<PsychoSocialResult>().LifestyleTransient().Forward<PsychoSocialResult>());
-            container.Register(Component.For<IReportElement>().ImplementedBy<SignatureSection>().LifestyleTransient().Forward<SignatureSection>());
-            
+            container.Register(Component.For<IReportElement>().ImplementedBy<SignatureSection>().LifestyleTransient().Forward<SignatureSection>());            
             
             // other elements
             container.Register(Component.For<IReportElement>().ImplementedBy<CleanUp>().LifestyleTransient().Forward<CleanUp>());
@@ -78,14 +77,12 @@ namespace OTS
         }
     }
 
-
     public class PsychoSocialResult:Section
     {
         private class List
         {
             public string Aspect { get; set; }
             public string Comment { get; set; }
-
         }
 
         protected override string SectionName
@@ -101,8 +98,6 @@ namespace OTS
 
     public class BNCE: Section
     {
-       
-
         protected override string SectionName
         {
             get { return "BNCE"; }
@@ -111,7 +106,6 @@ namespace OTS
         public override Func<Excel, object> ReportData
         {
             get { return e => new { Counter.I }; }
-
         }
     }
    public class Cam: Section
@@ -122,7 +116,6 @@ namespace OTS
             public string Type { get; set; }
             public string Score { get; set; }
             public string Comment { get; set; }
-
         }
 
         protected override string SectionName
@@ -133,7 +126,6 @@ namespace OTS
         public override Func<Excel, object> ReportData
         {
             get { return e => new { List = e.Get<List>("A2", "D4"), Counter.I }; }
-
         }
     }
 
@@ -147,8 +139,8 @@ namespace OTS
             public string ScaledScore { get; set; }
             public string Rank { get; set; }
             public string Comment { get; set; }
-
         }
+
         protected override string SectionName
         {
             get { return "Rivermead"; }
@@ -169,7 +161,6 @@ namespace OTS
             public string TimeNorm { get; set; }
             public string Errors { get; set; }
             public string Comment { get; set; }
-            
         }
 
         protected override string SectionName
@@ -182,7 +173,6 @@ namespace OTS
             get { return e => new {  List = e.Get<List>("A2", "E20"), Counter.I }; }
         }
     }
-
 
     public class CognitivePhychoSocialResult:Section
     {
@@ -200,16 +190,13 @@ namespace OTS
         {
             get { return e => new { Cognitive = e.Get<List>("A2", "B20"), Psychosocial = e.Get<List>("D2", "E20"), Counter.I }; }
         }
-    } public class PhysicalResults:BulletList
+    } 
+    
+    public class PhysicalResults:BulletList
     {
-       
         protected override string SectionName
         {
             get { return "Physical results"; }
-        }
-
-       
+        }  
     }
-
-   
 }

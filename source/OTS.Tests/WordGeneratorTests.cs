@@ -17,21 +17,23 @@ namespace OTS.Tests
 {
     public class WordGeneratorTests
     {
-        
-
-
         Config config;
-        [Test]
-        public void ShouldExecuteAllReportElements()
-        {
-            
-            File.Delete(config.WordReportFile);
-            ReportGenerator.Process();
-            Process.Start(config.WordReportFile);
-         }
 
-        [TestFixtureSetUp]
-        public void Setup()
+        public void SetupTestFileService()
+        {            
+            SetupBootStrapper().Initialize(config, Component.For(typeof(IFileService)).ImplementedBy(typeof(TestFileService)));
+        }
+
+        public void SetupGoogleFileService()
+        {
+            SetupBootStrapper().Initialize(config, Component
+                .For(typeof(IFileService))
+                .ImplementedBy(typeof(GoogleFileService))
+                .DependsOn(Dependency.OnValue("localPath", @"c:\googledrive"))
+                .DependsOn(Dependency.OnValue("pendingFilePattern", "_final")));
+        }
+
+        private BootStrapper SetupBootStrapper()
         {
             KillProcess("Excel");
             KillProcess("winword");
@@ -42,38 +44,27 @@ namespace OTS.Tests
                 WordTemplateFile = @"c:\googledrive\templates\template.docx",
                 WordReportFile = @"c:\googledrive\templates\report.docx",
                 ExcelInputFile = "input.xlsx",
-                WordSectionsPath = @"c:\googledrive\templates\Sections",
-                
+                WordSectionsPath = @"c:\googledrive\templates\Sections"
             };
-            bootStrapper.Initialize(config, Component.For(typeof(IFileService)).ImplementedBy(typeof(TestFileService)));
+            return bootStrapper;
         }
 
-        private static void KillProcess(string name)
+        [Test]
+        public void ShouldExecuteAllReportElements()
         {
-            foreach (Process p in Process.GetProcessesByName(name))
-            {
-                if (!p.HasExited)
-                {
-                    p.Kill();
-                }
-            }
-        }
-
+            SetupTestFileService();
+            File.Delete(config.WordReportFile);
+            ReportGenerator.Process();
+            Process.Start(config.WordReportFile);
+         }        
 
         [Test]
         public void test()
         {
+            SetupTestFileService();
             IoC.Get<MethodsUsed>().Execute();
             IoC.Get<CleanUp>().Execute();
             Process.Start(config.WordReportFile);
-        }
-
-        [Test]
-        public void ShouldDetectFileWithPattern()
-        {
-            string pattern = "_final";
-            FileInfo[] files = new DirectoryInfo(".").GetFiles(string.Format("*{0}.gsheet", pattern));
-            files.ToList().First().Name.ShouldEqual("TestSpreadSheet_final.gsheet");
         }
 
         [Test]
@@ -87,6 +78,26 @@ namespace OTS.Tests
                     var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<LocalGSheet>(jsonString);
                     string id = obj.resource_id.Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries)[1];
                     id.ShouldEqual("1d5BwM0Iir9JlnpglFSJTtC319ZyANp8DTAdzn3JxEAU");
+                }
+            }
+        }
+
+        [Test]
+        public void ShouldProcessWithGoogleFileService()
+        {
+            SetupGoogleFileService();
+            File.Delete(config.WordReportFile);
+            ReportGenerator.Process();
+            Process.Start(config.WordReportFile);
+        }
+
+        private static void KillProcess(string name)
+        {
+            foreach (Process p in Process.GetProcessesByName(name))
+            {
+                if (!p.HasExited)
+                {
+                    p.Kill();
                 }
             }
         }

@@ -16,7 +16,6 @@ namespace OTS
         }
 
         public void Replace<T>(T reportData)
-
         {
             using (var templateDocument = NGS.Templater.Configuration.Factory.Open(_reportFile))
             {
@@ -25,7 +24,6 @@ namespace OTS
             _document = new Document(_reportFile);
             Save();
         }
-
 
         private static string text;
         public bool ContainsValue(string value)
@@ -40,7 +38,6 @@ namespace OTS
             _document.LastSection.AppendContent(section.FirstSection);
             Save();
         }
-
 
         public void RemoveTemplaterLicenseSection()
         {

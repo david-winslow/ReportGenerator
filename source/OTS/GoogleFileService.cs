@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using Google.Apis.Auth.OAuth2;
@@ -19,13 +20,17 @@ public class GoogleFileService : IFileService
     private const string CLIENTID = "1057012666404-8lbnbd8cf45dr658c7bqa7jrufr66teo.apps.googleusercontent.com";
     private const string SECRET = "9Mkk3rCzOI2tYLsmmZqfzFec";
     private const string GDRIVEROOT = "root";
-    private const string LOCALPATH = "c:\\googledrive";
+    private readonly string _localPath;
+    private readonly string _pendingFilePattern;
+
     private string _inputSheetId;
     public string InputSheetId { get { return _inputSheetId; } }
 
-    public GoogleFileService()
+    public GoogleFileService(string localPath, string pendingFilePattern)
     {
         _service = GetAuthenticatedDriveService();
+        _pendingFilePattern = pendingFilePattern;
+        _localPath = localPath;
     }
 
     public void DownloadFile(string fileId, string target, string fileFormat)
@@ -39,6 +44,10 @@ public class GoogleFileService : IFileService
         }
     }
 
+    /// <summary>
+    /// Main Google Drive Authentication
+    /// </summary>
+    /// <returns>Authenticated Google Drive Service</returns>
     private DriveService GetAuthenticatedDriveService()
     {
         UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
@@ -62,13 +71,13 @@ public class GoogleFileService : IFileService
     }
 
     /// <summary>
-    /// Download a file and return a string with its content.
+    /// Download a file and return a stream
     /// </summary>
     /// <param name="authenticator">
     /// Authenticator responsible for creating authorized web requests.
     /// </param>
     /// <param name="file">Drive File instance.</param>
-    /// <returns>File's content if successful, null otherwise.</returns>
+    /// <returns>Stream if successful, null otherwise.</returns>
     public Stream GetGoogleDriveFileStream(string id, string exportFormat)
     {
         var file = _service.Files.Get(id).Execute();
@@ -102,19 +111,8 @@ public class GoogleFileService : IFileService
 
     public bool HasFileToProcess()
     {
-        var filesRequest = _service.Files.List();
-        filesRequest.Q = "mimeType!='application/vnd.google-apps.folder' and trashed=false";
-        var files = filesRequest.Execute();
-        foreach (var file in files.Items)
-        {
-            if (file.Title.EndsWith("_final"))
-            {
-                _inputSheetId = file.Id;
-                return true;
-            }
-        }
-        _inputSheetId = null;
-        return false;
+        FileInfo[] files = new DirectoryInfo(_localPath).GetFiles(string.Format("*{0}.gsheet", _pendingFilePattern));
+        return files.ToList().Any();
     }
 
     public void UploadFile(string filePath)
@@ -141,6 +139,6 @@ public class GoogleFileService : IFileService
 
     public void ProcessFile()
     {
-        DownloadFile(InputSheetId, Path.Combine(LOCALPATH, "input.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        DownloadFile(InputSheetId, Path.Combine(_localPath, "input.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 }

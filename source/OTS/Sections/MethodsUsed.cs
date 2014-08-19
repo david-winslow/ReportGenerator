@@ -10,8 +10,6 @@ namespace OTS
 
     public class MethodsUsed : Section
     {
-
-
         protected override string SectionName
         {
             get { return "Methods used"; }

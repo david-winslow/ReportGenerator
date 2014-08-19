@@ -11,11 +11,8 @@ namespace OTS
         public CleanUp(Word word)
         {
             _word = word;
-       
         }
 
-    
-    
         public void Execute()
         {
             _word.RemoveTemplaterLicenseSection();
@@ -30,7 +27,6 @@ namespace OTS
                    .ToArray()
                    .ConvertAll(n => n as Table)
                    .ForEach(t => t.FirstRow.RowFormat.HeadingFormat = true));
-         
         }
 
         public int OrderIndex {

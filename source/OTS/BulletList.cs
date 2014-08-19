@@ -29,7 +29,6 @@ namespace OTS
         {
             get { return "Pain report"; }
         }
-
     }
 
     public class GeneralObservations : BulletList
@@ -54,7 +53,5 @@ namespace OTS
         {
             get { return "Consistency performance"; }
         }
-
-
     }
 }
