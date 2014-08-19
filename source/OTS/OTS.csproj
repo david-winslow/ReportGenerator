@@ -117,6 +117,8 @@
     <Compile Include="BulletList.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="GoogleFileService.cs" />
+    <Compile Include="IFileService.cs" />
+    <Compile Include="LocalGSheet.cs" />
     <Compile Include="MainComplaints.cs" />
     <Compile Include="Sections\AssessmentInformation.cs" />
     <Compile Include="CleanUp.cs" />

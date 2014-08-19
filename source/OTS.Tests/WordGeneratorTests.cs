@@ -29,8 +29,9 @@ namespace OTS.Tests
             SetupBootStrapper().Initialize(config, Component
                 .For(typeof(IFileService))
                 .ImplementedBy(typeof(GoogleFileService))
-                .DependsOn(Dependency.OnValue("localPath", @"c:\googledrive"))
-                .DependsOn(Dependency.OnValue("pendingFilePattern", "_final")));
+                .DependsOn(Dependency.OnValue("localPath", config.GoogleDrivePath))
+                .DependsOn(Dependency.OnValue("pendingFilePattern", config.PendingFilePattern))
+                .DependsOn(Dependency.OnValue("excelInputFile", config.ExcelInputFile)));
         }
 
         private BootStrapper SetupBootStrapper()
@@ -41,10 +42,11 @@ namespace OTS.Tests
             var bootStrapper = new BootStrapper();
             config = new Config()
             {
-                WordTemplateFile = @"c:\googledrive\templates\template.docx",
-                WordReportFile = @"c:\googledrive\templates\report.docx",
+                GoogleDrivePath = @"c:\googledrive\",
+                WordTemplateFile = @"c:\googledrive\templates - Copy\template.docx",
+                WordReportFile = @"c:\googledrive\templates - Copy\report.docx",
                 ExcelInputFile = "input.xlsx",
-                WordSectionsPath = @"c:\googledrive\templates\Sections"
+                WordSectionsPath = @"c:\googledrive\templates - Copy\Sections"
             };
             return bootStrapper;
         }
@@ -65,21 +67,6 @@ namespace OTS.Tests
             IoC.Get<MethodsUsed>().Execute();
             IoC.Get<CleanUp>().Execute();
             Process.Start(config.WordReportFile);
-        }
-
-        [Test]
-        public void ShouldPullIdFromLocalGoogleSpreadsheet()
-        {
-            using (FileStream fs = new FileStream("TestSpreadSheet_final.gsheet", FileMode.Open, FileAccess.Read))
-            {
-                using (StreamReader sr = new StreamReader(fs))
-                {
-                    string jsonString = sr.ReadToEnd();
-                    var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<LocalGSheet>(jsonString);
-                    string id = obj.resource_id.Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries)[1];
-                    id.ShouldEqual("1d5BwM0Iir9JlnpglFSJTtC319ZyANp8DTAdzn3JxEAU");
-                }
-            }
         }
 
         [Test]
@@ -114,13 +101,5 @@ namespace OTS.Tests
         {
             
         }
-    }
-
-    public class LocalGSheet
-    {
-        [JsonProperty("url")]
-        public string url { get; set; }
-        [JsonProperty("resource_id")]
-        public string resource_id { get; set; }
-    }
+    }    
 }
