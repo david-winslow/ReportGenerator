@@ -11,7 +11,6 @@ namespace OTS
     {
         private readonly string _inputFile;
         private static Workbook _workbook;
-        public int DefaultWorkSheetIndex = 0;
         private ExcelQueryFactory _linq2Excel;
         public string DefaultWorkSheetName;
         public Excel(string inputFile)
@@ -24,8 +23,9 @@ namespace OTS
 
         public IEnumerable<T> Get<T>(string start, string end) 
         {
-            return from p in _linq2Excel.WorksheetRange<T>(start, end, DefaultWorkSheetName)
+            var result = from p in _linq2Excel.WorksheetRange<T>(start, end, DefaultWorkSheetName)
                     select p;
+            return result;
         }
 
         public string this[string name]
@@ -36,6 +36,13 @@ namespace OTS
         public Cell Cell(string workSheetName, string name)
         {
             return _workbook.Worksheets[workSheetName].Cells[name];
+        }
+
+        public IEnumerable<SelectedValue> SelectedValuesList(string startRange, string endRange)
+        {
+            return from v in _linq2Excel.WorksheetRange<SelectedValue>(startRange, endRange,DefaultWorkSheetName)
+            where !string.IsNullOrEmpty(v.Selected)
+            select v;
         }
     }
 

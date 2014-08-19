@@ -7,6 +7,7 @@ namespace OTS
     {
         public static void Process()
         {
+            
             var fileService = IoC.Get<IFileService>();
             if (fileService.HasFileToProcess())
             {

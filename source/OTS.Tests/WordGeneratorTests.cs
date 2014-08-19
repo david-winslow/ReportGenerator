@@ -24,6 +24,7 @@ namespace OTS.Tests
         [Test]
         public void ShouldExecuteAllReportElements()
         {
+            
             File.Delete(config.WordReportFile);
             ReportGenerator.Process();
             Process.Start(config.WordReportFile);
@@ -32,6 +33,9 @@ namespace OTS.Tests
         [TestFixtureSetUp]
         public void Setup()
         {
+            KillProcess("Excel");
+            KillProcess("winword");
+
             var bootStrapper = new BootStrapper();
             config = new Config()
             {
@@ -39,15 +43,28 @@ namespace OTS.Tests
                 WordReportFile = @"c:\googledrive\templates\report.docx",
                 ExcelInputFile = "input.xlsx",
                 WordSectionsPath = @"c:\googledrive\templates\Sections",
+                
             };
             bootStrapper.Initialize(config, Component.For(typeof(IFileService)).ImplementedBy(typeof(TestFileService)));
+        }
+
+        private static void KillProcess(string name)
+        {
+            foreach (Process p in Process.GetProcessesByName(name))
+            {
+                if (!p.HasExited)
+                {
+                    p.Kill();
+                }
+            }
         }
 
 
         [Test]
         public void test()
         {
-            IoC.Get<Background>().Execute();
+            IoC.Get<MethodsUsed>().Execute();
+            IoC.Get<CleanUp>().Execute();
             Process.Start(config.WordReportFile);
         }
 

@@ -2,12 +2,15 @@ using System;
 
 namespace OTS
 {
-    public class PurposeOfReport: BulletList
+    public class MainComplaints :BulletList
     {
+      
+
         protected override string SectionName
         {
-            get { return "Purposes"; }
+            get { return "Main Complaints"; }
         }
-        
+
+   
     }
 }

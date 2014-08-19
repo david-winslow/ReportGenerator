@@ -112,7 +112,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BootStrapper.cs" />
+    <Compile Include="BulletList.cs" />
     <Compile Include="GoogleFileService.cs" />
+    <Compile Include="MainComplaints.cs" />
     <Compile Include="Sections\AssessmentInformation.cs" />
     <Compile Include="CleanUp.cs" />
     <Compile Include="Sections\Doc.cs" />
@@ -121,7 +123,6 @@
     <Compile Include="IoC.cs" />
     <Compile Include="IReportElement.cs" />
     <Compile Include="Sections\LetterHead.cs" />
-    <Compile Include="Sections\List.cs" />
     <Compile Include="Sections\MedicalInformation.cs" />
     <Compile Include="Sections\MethodsUsed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
