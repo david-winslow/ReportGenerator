@@ -1,9 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
+using Aspose.Words;
 using LinqToExcel;
 using LinqToExcel.Query;
+using Microsoft.SqlServer.Server;
 using Cell = Aspose.Cells.Cell;
+using Shape = Aspose.Words.Drawing.Shape;
 
 namespace OTS
 {
@@ -21,11 +27,11 @@ namespace OTS
             _linq2Excel.StrictMapping = StrictMappingType.None;
         }
 
-        public IEnumerable<T> Get<T>(string start, string end) 
+        public List<T> Get<T>(string start, string end) 
         {
             var result = from p in _linq2Excel.WorksheetRange<T>(start, end, DefaultWorkSheetName)
                     select p;
-            return result;
+            return result.ToList();
         }
 
         public string this[string name]
@@ -37,12 +43,24 @@ namespace OTS
         {
             return _workbook.Worksheets[workSheetName].Cells[name];
         }
-
+        public Cell Cell(string name)
+        {
+            return _workbook.Worksheets.GetRangeByName(name)[0, 0];
+        }
         public IEnumerable<SelectedValue> SelectedValuesList(string startRange, string endRange)
         {
             return from v in _linq2Excel.WorksheetRange<SelectedValue>(startRange, endRange,DefaultWorkSheetName)
             where !string.IsNullOrEmpty(v.Selected)
             select v;
         }
+
+        public MemoryStream GetGraph(string name)
+        {
+            MemoryStream stream = new MemoryStream();
+            _workbook.Worksheets[DefaultWorkSheetName].Charts[name].ToImage(stream,ImageFormat.Png);
+            stream.Seek(0, SeekOrigin.Begin);
+            return stream;
+        }
+
     }
 }

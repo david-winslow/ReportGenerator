@@ -48,6 +48,7 @@ namespace OTS
         {
             Excel.DefaultWorkSheetName = SectionName;
             Word.InsertSection(_sectionFileLocator.GetSectionPath(SectionName, Excel.Cell("Configuration", "B8").StringValue, Excel.Cell("Configuration", "B2").StringValue));
+            if(ReportData != null)
             Word.Replace(ReportData(Excel));
         }
 

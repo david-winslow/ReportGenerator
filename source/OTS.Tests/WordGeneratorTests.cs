@@ -17,6 +17,39 @@ namespace OTS.Tests
 {
     public class WordGeneratorTests
     {
+        public class Tests
+        {
+            [Test]
+            public void Setup()
+            {
+
+
+
+            }
+
+
+            [Test]
+            [TestCase("N", 36, "8", "12-19")]
+            [TestCase("B", 36, "0", "2")]
+            public void ShouldReturnCorrectScaledScore(string testName, int age, string score, string scaledScore)
+            {
+                RiverMeadRepository.GetScaledScore(testName, age, score).ShouldEqual(scaledScore);
+            }
+
+            [Test]
+            public void ShouldReturnCorrectComment()
+            {
+                RiverMeadRepository.GetComment("5").ShouldEqual("Below average");
+                RiverMeadRepository.GetComment("0,38").ShouldEqual("Below average");
+                RiverMeadRepository.GetComment("99,6").ShouldEqual("Above average");
+            }
+
+
+
+
+        }
+
+
         Config config;
 
         public void SetupTestFileService()
@@ -43,10 +76,10 @@ namespace OTS.Tests
             config = new Config()
             {
                 GoogleDrivePath = @"c:\googledrive\",
-                WordTemplateFile = @"c:\googledrive\templates - Copy\template.docx",
-                WordReportFile = @"c:\googledrive\templates - Copy\report.docx",
+                WordTemplateFile = @"c:\googledrive\templates\template.docx",
+                WordReportFile = @"c:\googledrive\templates\report.docx",
                 ExcelInputFile = "input.xlsx",
-                WordSectionsPath = @"c:\googledrive\templates - Copy\Sections"
+                WordSectionsPath = @"c:\googledrive\templates\Sections"
             };
             return bootStrapper;
         }
@@ -64,7 +97,7 @@ namespace OTS.Tests
         public void test()
         {
             SetupTestFileService();
-            IoC.Get<MethodsUsed>().Execute();
+            IoC.Get<RiverMeadTest>().Execute();
             IoC.Get<CleanUp>().Execute();
             Process.Start(config.WordReportFile);
         }

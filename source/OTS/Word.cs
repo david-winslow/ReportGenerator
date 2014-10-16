@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Aspose.Words;
 
 namespace OTS
@@ -32,6 +33,8 @@ namespace OTS
             return text.Contains(value);
         }
 
+
+
         public void InsertSection(string sectionPath)
         {
             var section = new Document(sectionPath);
@@ -52,6 +55,14 @@ namespace OTS
         public void UpdateWordDocument(Action<Document> applyAction )
         {
             applyAction(_document);
+            Save();
+        }
+
+        public void InsertImage(MemoryStream stream, string bookmark)
+        {
+            var documentBuilder = new DocumentBuilder(_document);
+            documentBuilder.MoveToBookmark(bookmark);
+            documentBuilder.InsertImage(stream);
             Save();
         }
     }

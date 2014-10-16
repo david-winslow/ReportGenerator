@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Aspose.Words.Drawing;
 using Castle.Core.Internal;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
@@ -16,7 +20,7 @@ namespace OTS
         public void Initialize(Config config,params ComponentRegistration<object>[] components)
         {
             SetLicenses();
-            
+           
             WindsorContainer container = new WindsorContainer();
             components.ForEach(x => container.Register(x));
             container.Register(Component.For<Excel>()
@@ -31,10 +35,12 @@ namespace OTS
             container.Register(Component.For<SectionFileLocator>()
                 .LifestyleSingleton()
                 .DependsOn(Dependency.OnValue("wordSectionsPath", config.WordSectionsPath)));
+            container.Register(Component.For<Config>().ImplementedBy<Config>().LifestyleTransient().Forward<Config>());
 
             //Section elements
             container.Register(Component.For<IReportElement>().ImplementedBy<LetterHead>().LifestyleTransient().Forward<LetterHead>());
-            container.Register(Component.For<IReportElement>().ImplementedBy<AssessmentInformation>().LifestyleTransient().Forward<AssessmentInformation>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<AssessmentInformation>().LifestyleTransient().Forward<AssessmentInformation>()); 
+            container.Register(Component.For<IReportElement>().ImplementedBy<PurposeOfReport>().LifestyleTransient().Forward<PurposeOfReport>());
             container.Register(Component.For<IReportElement>().ImplementedBy<MethodsUsed>().LifestyleTransient().Forward<MethodsUsed>());
             container.Register(Component.For<IReportElement>().ImplementedBy<DocumentationReceived>().LifestyleTransient().Forward<DocumentationReceived>());
             container.Register(Component.For<IReportElement>().ImplementedBy<MedicalInformation>().LifestyleTransient().Forward<MedicalInformation>());
@@ -46,7 +52,12 @@ namespace OTS
             container.Register(Component.For<IReportElement>().ImplementedBy<PainReport>().LifestyleTransient().Forward<PainReport>());
             container.Register(Component.For<Safety>().ImplementedBy<Safety>().LifestyleTransient().Forward<Safety>());
 
-            container.Register(Component.For<IReportElement>().ImplementedBy<PhysicalResults>().LifestyleTransient().Forward<PhysicalResults>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<AssessmentResults>().LifestyleTransient().Forward<AssessmentResults>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<Musculoskeletal>().LifestyleTransient().Forward<Musculoskeletal>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<HandFunction>().LifestyleTransient().Forward<HandFunction>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<GripPinchStrengthTest>().LifestyleTransient().Forward<GripPinchStrengthTest>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<RapidExchangeGrip>().LifestyleTransient().Forward<RapidExchangeGrip>());
+
             container.Register(Component.For<IReportElement>().ImplementedBy<CognitivePhychoSocialResult>().LifestyleTransient().Forward<CognitivePhychoSocialResult>());
             container.Register(Component.For<IReportElement>().ImplementedBy<Thurstone>().LifestyleTransient().Forward<Thurstone>());
             container.Register(Component.For<IReportElement>().ImplementedBy<RiverMeadTest>().LifestyleTransient().Forward<RiverMeadTest>());
@@ -125,9 +136,108 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return e => new { List = e.Get<List>("A2", "D4"), Counter.I }; }
+            get { return e => new { List = e.Get<List>("A2", "D4"), Counter.I}; }
         }
     }
+
+    public class AssessmentResults : Section
+    {
+        protected override string SectionName
+        {
+            get { return "AssessmentResults"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new { Counter.I }; }
+        }
+    }
+
+    public class HandFunction :Section
+    {
+        protected override string SectionName
+        {
+            get { return "HandFunction"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new { Counter.I, Counter.Ar }; }
+        }
+    }
+
+    public class RapidExchangeGrip:Section
+    {
+        private readonly Config _config;
+
+        public RapidExchangeGrip(Config config)
+        {
+            _config = config;
+        }
+        protected override string SectionName
+        {
+            get { return "Rapid exchange grip strength"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new { Counter.I, Counter.Ar,Counter.Hf }; }
+        }
+
+        public override void Execute()
+        {
+            base.Execute();
+            Word.InsertImage(Excel.GetGraph("Chart 3"),"DH");
+            Word.InsertImage(Excel.GetGraph("Chart 4"),"NDH");
+        }
+    }
+
+    public class Musculoskeletal : Section
+   {
+       private class List
+       {
+           public string Ability { get; set; }
+           public string Text { get; set; }
+          
+       }
+
+
+       protected override string SectionName
+       {
+           get { return "Musculoskeletal"; }
+       }
+
+       public override Func<Excel, object> ReportData
+       {
+           get { return e => new { List = e.Get<List>("A1", "B20"), Counter.I, Counter.Ar  }; }
+       }
+   }
+
+
+    public class GripPinchStrengthTest : Section
+    {
+        private class L
+        {
+            public string Grip { get; set; }
+            public string Hand { get; set; }
+            public string Force { get; set; }
+            public string Mean { get; set; }
+            public string SD { get; set; }
+            public string CD { get; set; }
+            public string Result { get; set; }
+        }
+
+        protected override string SectionName
+        {
+            get { return "grip pinch strength"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new {L = e.Get<L>("A2", "G10"), Counter.I, Counter.Ar, Counter.Hf}; }
+        }
+    }
+
 
     public class RiverMeadTest :Section
     {
@@ -139,6 +249,7 @@ namespace OTS
             public string ScaledScore { get; set; }
             public string Rank { get; set; }
             public string Comment { get; set; }
+            public string TestName { get; set; }
         }
 
         protected override string SectionName
@@ -148,8 +259,24 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return e => new { List = e.Get<List>("A1", "F8"), Counter.I }; }
+            get { return e => new { List =GetData(e) }; }
         }
+
+        private IEnumerable<List> GetData(Excel excel)
+        {
+            int age = excel.Cell("age").IntValue;
+            List<List> data = new List<List>(excel.Get<List>("A1","D15").Where(l => !l.RawScore.IsNullOrEmpty()));
+            
+            data.ForEach(d =>
+            {
+                d.ScaledScore = RiverMeadRepository.GetScaledScore(d.TestName, age, d.RawScore);
+                d.Rank = RiverMeadRepository.GetRank(d.ScaledScore);
+                d.Comment = RiverMeadRepository.GetComment(d.Rank);
+            });
+            return data;
+        }
+
+   
     }
 
     public class Thurstone:Section
@@ -192,11 +319,5 @@ namespace OTS
         }
     } 
     
-    public class PhysicalResults:BulletList
-    {
-        protected override string SectionName
-        {
-            get { return "Physical results"; }
-        }  
-    }
+   
 }

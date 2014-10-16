@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Castle.Core.Internal;
 
@@ -13,8 +14,22 @@ namespace OTS
                 fileService.ProcessFile();
                 var result = from element in IoC.GetAll<IReportElement>()
                     select element;
-                result.ToList().ForEach(e => e.Execute());
+                result.ToList().ForEach(e => GetValue(e));
             }
+        }
+
+        private static void GetValue(IReportElement e)
+        {
+            try
+            {
+                e.Execute();
+            }
+            catch (Exception)
+            {
+                
+                throw new Exception(e.ToString());
+            }
+            
         }
     }
 }
