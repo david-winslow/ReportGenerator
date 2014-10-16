@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Aspose.Words.Drawing;
 using Castle.Core.Internal;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Remotion.Logging;
 
 namespace OTS
 {
@@ -281,12 +283,17 @@ namespace OTS
 
     public class Thurstone:Section
     {
-        private class List
+        private class L
         {
+            public int TimeMinutes { get; set; }
+            public int TimeSeconds { get; set; }
+            public int NormMinutes { get; set; }
+            public int NormSeconds { get; set; }
+
             public string Test { get; set; }
             public string Time { get; set; }
             public string TimeNorm { get; set; }
-            public string Errors { get; set; }
+            public int Errors { get; set; }
             public string Comment { get; set; }
         }
 
@@ -297,7 +304,44 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return e => new {  List = e.Get<List>("A2", "E20"), Counter.I }; }
+            get { return e =>
+            {
+                var list = new List<L>(e.Get<L>("A2", "I6"));
+                foreach (var item in list)
+                {
+                    item.Time = GetFormattedTime(item.TimeMinutes,item.TimeSeconds);
+                    item.TimeNorm = GetFormattedTime(item.NormMinutes,item.NormSeconds);
+                    item.Comment = GetComment(new TimeSpan(0, 0, item.TimeMinutes, item.TimeSeconds),item.Errors);
+                }
+                list.Add(new L() { Test = "Total", Time = GetTotalTime(list), Errors = list.Sum(x => x.Errors), TimeNorm = GetNormTotalTime(list)});
+                return new {  List = list, Counter.I };
+            }; }
+        }
+
+        private string GetTotalTime(List<L> list)
+        {
+            TimeSpan result = new TimeSpan();
+            list.ForEach(t =>  result =result.Add(new TimeSpan(0,0,t.TimeMinutes,t.TimeSeconds)));
+            return GetFormattedTime(result.Minutes, result.Seconds);
+        }
+
+        private string GetNormTotalTime(List<L> list)
+        {
+            TimeSpan result = new TimeSpan();
+            list.ForEach(t => result =result.Add(new TimeSpan(0, 0, t.NormMinutes, t.NormSeconds)));
+            return GetFormattedTime(result.Minutes, result.Seconds);
+        }
+
+        private string GetComment(TimeSpan time,int errorCount)
+        {
+            return string.Format("Speed: {0} \n accuracy: {1}",(time.TotalSeconds < 120) ? "Fast" : "Below average",(errorCount == 0) ? "Adequate" : (errorCount > 3) ? "Below average" :"Average");
+            
+        }
+
+        private string GetFormattedTime(double min,double sec)
+        {
+           return string.Format("{0} {1}", (min > 0) ? string.Format("{0} minutes", min) : string.Empty,
+                        (sec > 0) ? string.Format("{0} seconds", sec) : string.Empty);
         }
     }
 

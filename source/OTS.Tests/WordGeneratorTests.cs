@@ -85,6 +85,12 @@ namespace OTS.Tests
         }
 
         [Test]
+        public void test1()
+        {
+            Console.WriteLine(new TimeSpan(0, 0, 2, 5).ToString("m minutes s seconds"));
+        }
+
+        [Test]
         public void ShouldExecuteAllReportElements()
         {
             SetupTestFileService();
@@ -97,7 +103,7 @@ namespace OTS.Tests
         public void test()
         {
             SetupTestFileService();
-            IoC.Get<RiverMeadTest>().Execute();
+            IoC.Get<Thurstone>().Execute();
             IoC.Get<CleanUp>().Execute();
             Process.Start(config.WordReportFile);
         }
@@ -121,6 +127,8 @@ namespace OTS.Tests
                 }
             }
         }
+
+     
     }
 
     public class TestFileService : IFileService
