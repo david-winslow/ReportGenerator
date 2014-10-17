@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Castle.Core.Internal;
 
 namespace OTS
 {
@@ -45,7 +47,7 @@ namespace OTS
                 Accessibility=e["B9"], 
                 Access =e["B10"], 
                 Assistance =e["B11"], 
-                Edu = e.Get<Education>("A28","C39"),
+                Edu = e.Get<Education>("A28","C39").Where(ee => !ee.Accomplishment.IsNullOrEmpty()),
                 Counter.I
             }; }
         }

@@ -53,14 +53,17 @@ namespace OTS
             container.Register(Component.For<IReportElement>().ImplementedBy<CooperationEffort>().LifestyleTransient().Forward<CooperationEffort>());
             container.Register(Component.For<IReportElement>().ImplementedBy<ConsistencyOfPerformance>().LifestyleTransient().Forward<ConsistencyOfPerformance>());
             container.Register(Component.For<IReportElement>().ImplementedBy<PainReport>().LifestyleTransient().Forward<PainReport>());
-            container.Register(Component.For<Safety>().ImplementedBy<Safety>().LifestyleTransient().Forward<Safety>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<Safety>().LifestyleTransient().Forward<Safety>());
 
             container.Register(Component.For<IReportElement>().ImplementedBy<AssessmentResults>().LifestyleTransient().Forward<AssessmentResults>());
             container.Register(Component.For<IReportElement>().ImplementedBy<Musculoskeletal>().LifestyleTransient().Forward<Musculoskeletal>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<WorkWell>().LifestyleTransient().Forward<WorkWell>());
             container.Register(Component.For<IReportElement>().ImplementedBy<HandFunction>().LifestyleTransient().Forward<HandFunction>());
             container.Register(Component.For<IReportElement>().ImplementedBy<GripPinchStrengthTest>().LifestyleTransient().Forward<GripPinchStrengthTest>());
             container.Register(Component.For<IReportElement>().ImplementedBy<RapidExchangeGrip>().LifestyleTransient().Forward<RapidExchangeGrip>());
             container.Register(Component.For<IReportElement>().ImplementedBy<ADL>().LifestyleTransient().Forward<ADL>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<AbiltiesLimitations>().LifestyleTransient().Forward<AbiltiesLimitations>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<JobAnalysis>().LifestyleTransient().Forward<JobAnalysis>());
 
             container.Register(Component.For<IReportElement>().ImplementedBy<CognitivePhychoSocialResult>().LifestyleTransient().Forward<CognitivePhychoSocialResult>());
             container.Register(Component.For<IReportElement>().ImplementedBy<Thurstone>().LifestyleTransient().Forward<Thurstone>());
@@ -68,13 +71,132 @@ namespace OTS
             container.Register(Component.For<IReportElement>().ImplementedBy<Cam>().LifestyleTransient().Forward<Cam>());
             container.Register(Component.For<IReportElement>().ImplementedBy<BNCE>().LifestyleTransient().Forward<BNCE>());
             container.Register(Component.For<IReportElement>().ImplementedBy<PsychoSocialResult>().LifestyleTransient().Forward<PsychoSocialResult>());
-            container.Register(Component.For<IReportElement>().ImplementedBy<SignatureSection>().LifestyleTransient().Forward<SignatureSection>());            
+            container.Register(Component.For<IReportElement>().ImplementedBy<Prognosis>().LifestyleTransient().Forward<Prognosis>());            
+            container.Register(Component.For<IReportElement>().ImplementedBy<Conclusion>().LifestyleTransient().Forward<Conclusion>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<Recommendations>().LifestyleTransient().Forward<Recommendations>());
+
+            container.Register(Component.For<IReportElement>().ImplementedBy<SignatureSection>().LifestyleTransient().Forward<SignatureSection>());
             
             // other elements
             container.Register(Component.For<IReportElement>().ImplementedBy<CleanUp>().LifestyleTransient().Forward<CleanUp>());
            IoC._container = container;
         }
     }
+
+    public class WorkWell:Section
+    {
+        private class L
+        {
+            public string Position { get; set; }
+            public string Low { get; set; }
+            public string Heavy { get; set; }
+            public string Max { get; set; }
+            public string Limitations { get; set; }
+
+        }
+        private class P
+        {
+            public string Posture { get; set; }
+            public string U { get; set; }
+            public string S { get; set; }
+            public string SL { get; set; }
+            public string SNL { get; set; }
+            public string Comments { get; set; }
+
+        }
+
+        protected override string SectionName
+        {
+            get { return "WorkWell"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new {L = e.Get<L>("A4", "E13").Where(x => !x.Limitations.IsNullOrEmpty()), Counter.I, P = e.Get<P>("H4", "M13").Where(x => !x.Comments.IsNullOrEmpty())}; }
+        }
+    }
+
+
+    public class Prognosis:Section
+    {
+        protected override string SectionName
+        {
+            get { return "Prognosis"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new { Counter.I }; }
+        }
+    }
+
+    public class Conclusion : Section
+    {
+        protected override string SectionName
+        {
+            get { return "Conclusion"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new {Counter.I}; }
+        }
+    }
+
+    public class Recommendations : Section
+    {
+        protected override string SectionName
+        {
+            get { return "Recommendations"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new { Counter.I }; }
+        }
+    }
+
+    public class JobAnalysis:Section
+    {
+        private class Item
+        {
+           public string Type { get; set; }
+           public string Demand { get; set; }
+           public string Ability { get; set; }
+           public string Match { get; set; }
+
+        }
+
+        protected override string SectionName
+        {
+            get { return "JobAnalysis"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new {L = e.Get<Item>("A2", "D30"), Counter.I}; }
+        }
+    }
+
+    public class AbiltiesLimitations:Section
+    {
+        public class Item :Selectable
+        {
+            public string Text { get; set; }
+            
+        }
+
+        protected override string SectionName
+        {
+            get { return "AbiltiesLimitations"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new {A = e.GetSelected<Item>("A2", "B20"), L = e.GetSelected<Item>("C2", "D20"),Counter.I, II = Counter.I}; }
+        }
+    }
+
 
     public class ADL:Section
     {
