@@ -2,9 +2,12 @@
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Words;
+using Castle.Core.Internal;
+using Castle.MicroKernel.ModelBuilder.Descriptors;
 using LinqToExcel;
 using LinqToExcel.Query;
 using Microsoft.SqlServer.Server;
@@ -34,6 +37,15 @@ namespace OTS
             return result.ToList();
         }
 
+        public List<T> GetSelected<T>(string start, string end) where T:ISelectable
+        {
+            var result = from p in _linq2Excel.WorksheetRange<T>(start, end, DefaultWorkSheetName)
+                         where !p.Selected.IsNullOrEmpty()
+                         select p;
+            return result.ToList();
+        }
+
+
         public string this[string name]
         {
             get { return Cell(DefaultWorkSheetName, name).StringValue; }
@@ -62,5 +74,14 @@ namespace OTS
             return stream;
         }
 
+    }
+    public class Selectable:ISelectable
+    {
+        public string Selected { get; set; }
+    }
+
+    public interface ISelectable
+    {
+        string Selected { get; set; }
     }
 }

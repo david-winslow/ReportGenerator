@@ -84,11 +84,7 @@ namespace OTS.Tests
             return bootStrapper;
         }
 
-        [Test]
-        public void test1()
-        {
-            Console.WriteLine(new TimeSpan(0, 0, 2, 5).ToString("m minutes s seconds"));
-        }
+     
 
         [Test]
         public void ShouldExecuteAllReportElements()
@@ -103,7 +99,7 @@ namespace OTS.Tests
         public void test()
         {
             SetupTestFileService();
-            IoC.Get<Thurstone>().Execute();
+            IoC.Get<ADL>().Execute();
             IoC.Get<CleanUp>().Execute();
             Process.Start(config.WordReportFile);
         }

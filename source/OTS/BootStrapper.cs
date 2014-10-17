@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using Aspose.Cells;
 using Aspose.Words.Drawing;
 using Castle.Core.Internal;
 using Castle.MicroKernel.Registration;
@@ -59,6 +60,7 @@ namespace OTS
             container.Register(Component.For<IReportElement>().ImplementedBy<HandFunction>().LifestyleTransient().Forward<HandFunction>());
             container.Register(Component.For<IReportElement>().ImplementedBy<GripPinchStrengthTest>().LifestyleTransient().Forward<GripPinchStrengthTest>());
             container.Register(Component.For<IReportElement>().ImplementedBy<RapidExchangeGrip>().LifestyleTransient().Forward<RapidExchangeGrip>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<ADL>().LifestyleTransient().Forward<ADL>());
 
             container.Register(Component.For<IReportElement>().ImplementedBy<CognitivePhychoSocialResult>().LifestyleTransient().Forward<CognitivePhychoSocialResult>());
             container.Register(Component.For<IReportElement>().ImplementedBy<Thurstone>().LifestyleTransient().Forward<Thurstone>());
@@ -71,6 +73,42 @@ namespace OTS
             // other elements
             container.Register(Component.For<IReportElement>().ImplementedBy<CleanUp>().LifestyleTransient().Forward<CleanUp>());
            IoC._container = container;
+        }
+    }
+
+    public class ADL:Section
+    {
+        private class Item :Selectable
+        {
+            public string Activity { get; set; }
+            public string Present { get; set; }
+
+        }
+
+        protected override string SectionName
+        {
+            get { return "ADL"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e =>
+            {
+                List<Item> items = e.GetSelected<Item>("A1", "C70");
+                items.ForEach(i => i.Present= i.Present.Replace("[[Client]]",RandomClientNames(e.Cell("ClientSurname").StringValue,e.Cell("ClientTitle").StringValue,e.Cell("ClientGender").StringValue.ToLower())));
+                return new {List = items, Counter.I};
+            }; }
+        }
+        static Random Random = new Random();
+        private string RandomClientNames(string lastName, string title, string gender)
+        {
+            var l = new List<string>
+            {
+                string.Format("{0}. {1}", title, lastName),
+                (gender == "male" ? "He" : "She"),
+                "The Client"
+            };
+            return l[Random.Next(0, l.Count)];
         }
     }
 
