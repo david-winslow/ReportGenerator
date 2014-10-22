@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Castle.Core.Internal;
 
 namespace OTS
 {
@@ -25,7 +27,7 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return e => new {Conclusion="on this date blblalf", MedicalData = e.Get<MedicalData>("A1", "B20"), Counter.I, BodyCheck = e.Get<BodyCheck>("D1", "E8") }; }
+            get { return e => new {MedicalData = e.Get<MedicalData>("medicalHistory").Where(x => !x.History.IsNullOrEmpty()), Counter.I, BodyCheck = e.Get<BodyCheck>("bodyCheck") }; }
         }
     }
 }

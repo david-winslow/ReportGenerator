@@ -109,7 +109,7 @@ namespace OTS.Tests
         public void test()
         {
             SetupTestFileService();
-            IoC.Get<DocumentationReceived>().Execute();
+            IoC.Get<OccupationalHistory>().Execute();
             IoC.Get<CleanUp>().Execute();
             Process.Start(config.WordReportFile);
         }

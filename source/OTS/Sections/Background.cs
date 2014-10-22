@@ -17,24 +17,23 @@ namespace OTS
         {
             get { return e => new
             {
-                Dependents = e["B2"],
-                MaritalStatus = e["B3"],
-                SupportStructure = e["B4"], 
-                Dwelling =e["B6"], 
-                Occupants =e["B7"], 
-                Facilities =e["B8"], 
-                Accessibility=e["B9"], 
-                Access =e["B10"], 
-                Assistance =e["B11"], 
-                Edu = e.Get<Education>("A28","C39").Where(ee => !CollectionExtensions.IsNullOrEmpty(ee.Accomplishment)),
+                Dependents = e["Dependents"],
+                MaritalStatus = e["MaritalStatus"],
+                SupportStructure = e["SupportStructure"], 
+                Dwelling =e["dwelling"],
+                Occupants = e["Occupants"],
+                Facilities = e["Facilities"],
+                Accessibility = e["Accessibility"],
+                Access = e["Access"],
+                Assistance = e["Assistance"], 
+                L = e.Get<Education>("Education").Where(ee => !ee.Accomplishment.IsNullOrEmpty()),
                 Counter.I
             }; }
         }
 
-        public class Education
+        private class Education
         {
-            public string Period { get; set; }
-            public string Institution { get; set; }
+            public string EducationLevel { get; set; }
             public string Accomplishment { get; set; }
         }
     }

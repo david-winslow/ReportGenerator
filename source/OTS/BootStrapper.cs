@@ -48,6 +48,8 @@ namespace OTS
             container.Register(Component.For<IReportElement>().ImplementedBy<DocumentationReceived>().LifestyleTransient().Forward<DocumentationReceived>());
             container.Register(Component.For<IReportElement>().ImplementedBy<MedicalInformation>().LifestyleTransient().Forward<MedicalInformation>());
             container.Register(Component.For<IReportElement>().ImplementedBy<Background>().LifestyleTransient().Forward<Background>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<OccupationalHistory>().LifestyleTransient().Forward<OccupationalHistory>());
+
             container.Register(Component.For<IReportElement>().ImplementedBy<MainComplaints>().LifestyleTransient().Forward<MainComplaints>());
             container.Register(Component.For<IReportElement>().ImplementedBy<GeneralObservations>().LifestyleTransient().Forward<GeneralObservations>());
             container.Register(Component.For<IReportElement>().ImplementedBy<CooperationEffort>().LifestyleTransient().Forward<CooperationEffort>());
