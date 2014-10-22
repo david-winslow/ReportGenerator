@@ -47,7 +47,7 @@ namespace OTS
         public virtual void Execute()
         {
             Excel.DefaultWorkSheetName = SectionName;
-            Word.InsertSection(_sectionFileLocator.GetSectionPath(SectionName, Excel.Cell("Configuration", "B8").StringValue, Excel.Cell("Configuration", "B2").StringValue));
+            Word.InsertSection(_sectionFileLocator.GetSectionPath(SectionName, Excel.Cell("TemplateName").StringValue, Excel.Cell("Therapist_FirstName").StringValue));
             if(ReportData != null)
             Word.Replace(ReportData(Excel));
         }

@@ -139,7 +139,8 @@
     <Compile Include="RiverMeadTestItem.cs" />
     <Compile Include="Sections\AssessmentInformation.cs" />
     <Compile Include="CleanUp.cs" />
-    <Compile Include="Sections\Doc.cs" />
+    <Compile Include="Sections\Background.cs" />
+    <Compile Include="Sections\Counter.cs" />
     <Compile Include="Sections\DocumentationReceived.cs" />
     <Compile Include="Excel.cs" />
     <Compile Include="IoC.cs" />

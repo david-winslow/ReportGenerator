@@ -12,6 +12,7 @@ using LinqToExcel;
 using LinqToExcel.Query;
 using Microsoft.SqlServer.Server;
 using Cell = Aspose.Cells.Cell;
+using SaveFormat = Aspose.Cells.SaveFormat;
 using Shape = Aspose.Words.Drawing.Shape;
 
 namespace OTS
@@ -37,9 +38,23 @@ namespace OTS
             return result.ToList();
         }
 
+        public List<T> Get<T>(string namedRange)
+        {
+            var result = from p in _linq2Excel.NamedRange<T>(namedRange)
+                         select p;
+            return result.ToList();
+        }
+
         public List<T> GetSelected<T>(string start, string end) where T:ISelectable
         {
             var result = from p in _linq2Excel.WorksheetRange<T>(start, end, DefaultWorkSheetName)
+                         where !p.Selected.IsNullOrEmpty()
+                         select p;
+            return result.ToList();
+        }
+        public List<T> GetSelected<T>(string namedRange) where T : ISelectable
+        {
+            var result = from p in _linq2Excel.NamedRange<T>(namedRange)
                          where !p.Selected.IsNullOrEmpty()
                          select p;
             return result.ToList();
@@ -48,7 +63,7 @@ namespace OTS
 
         public string this[string name]
         {
-            get { return Cell(DefaultWorkSheetName, name).StringValue; }
+            get { return Cell(name).StringValue; }
         }
 
         public Cell Cell(string workSheetName, string name)
@@ -74,6 +89,21 @@ namespace OTS
             return stream;
         }
 
+        public void ClearInputFields()
+        {
+            WorksheetCollection worksheets = _workbook.Worksheets;
+            foreach (var worksheet in worksheets)
+            {
+                Cells cells = worksheet.Cells;
+                foreach (Cell cell in cells)
+                {
+                    if (cell.SharedStyleIndex == 70)
+                    cell.Value = string.Empty;
+                    
+                }
+            }
+            _workbook.Save(File.Create("clean_input.xlsx"),SaveFormat.Auto);
+        }
     }
     public class Selectable:ISelectable
     {

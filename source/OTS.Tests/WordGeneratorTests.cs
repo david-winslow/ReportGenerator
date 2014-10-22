@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Castle.Core;
 using Castle.Core.Internal;
@@ -84,7 +85,16 @@ namespace OTS.Tests
             return bootStrapper;
         }
 
-     
+        [Test]
+        public void ClearAllInputFields()
+        {
+            SetupTestFileService();
+            var excel = IoC.Get<Excel>();
+            excel.ClearInputFields();
+            Thread.Sleep(1000);
+            Process.Start("clean_input.xlsx");
+        }
+
 
         [Test]
         public void ShouldExecuteAllReportElements()
@@ -99,7 +109,7 @@ namespace OTS.Tests
         public void test()
         {
             SetupTestFileService();
-            IoC.Get<WorkWell>().Execute();
+            IoC.Get<DocumentationReceived>().Execute();
             IoC.Get<CleanUp>().Execute();
             Process.Start(config.WordReportFile);
         }

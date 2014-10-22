@@ -1,12 +1,23 @@
 using System;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using Castle.Core.Internal;
 using Remotion.Data.Linq.Clauses;
 
 namespace OTS
 {
+    
+
+
     public class AssessmentInformation : Section
     {
+        private class LL
+        {
+            public string Relationship { get; set; }
+            public string Name { get; set; }
+        }
+
         public override Func<Excel, object> ReportData
         {
             get
@@ -15,46 +26,37 @@ namespace OTS
                     e =>
                         new
                         {
-                            ClientName = e["B2"],
-                            IDNumber = e.Cell(SectionName,"B3").DoubleValue,
-                            Age = GetAge(e.Cell(SectionName, "B3").DoubleValue),
-                            Address = e["B5"],
-                            ContactNumber = e["B6"],
-                            AssessmentDate = e.Cell(SectionName, "B7").DateTimeValue.ToString("dd MMMM yyyy"),
-                            Location = "554 Louis Botha Ave, Gresswold, Johannesburg",
-                            Language = e["B9"],
+                            ClientName = string.Format("{0} {1}", e["Client_FirstName"],e["Client_Surname"]),
+                            IDNumber = e.Cell("IdNumber").DoubleValue,
+                            Age = GetAge(e.Cell("age").DoubleValue),
+                            Address = e["Client_Address"],
+                            ContactNumber = e["Client_ContactNumber"],
+                            AssessmentDate = e.Cell("assessmentDate").DateTimeValue.ToString("dd MMMM yyyy"),
+                            Location = e["assessmentLocation"],
+                            Language = e["AssessmentLanguage"],
                             ReportDate = DateTime.Now.ToString("dd MMMM yyyy"),
                             Duration = BuildDuration(),
-                            RefCompany = e["B13"],
-                            RefAssessor = e["B14"],
-                            OurRef = e["B15"],
-                            YourRef = e["B16"],
-                            Title = e["B17"],
-                            PeoplePresent = BuildPeoplePresent(),Counter.I
+                            RefCompany = e["refCompany"],
+                            RefAssessor = e["refAssessor"],
+                            OurRef = e["ourRef"],
+                            YourRef = e["yourRef"],
+                            Title = e["Client_Title"],
+                            L = e.Get<LL>("People_Present").Where(p => !p.Name.IsNullOrEmpty()),
+                            Counter.I
                         };
             }
         }
 
         private string BuildDuration()
         {
-            int minutes = Excel.Cell(SectionName, "B12").IntValue;
-            int hours = Excel.Cell(SectionName, "B11").IntValue;
+            int minutes = Excel.Cell("Duration_Minutes").IntValue;
+            int hours = Excel.Cell("duration_hours").IntValue;
 
             return (minutes == 0) ? string.Format("{0} hours", hours) :
             string.Format("{0} hours and {1} minutes", hours, minutes);
         }
 
-        private string BuildPeoplePresent()
-        {
-            StringBuilder sb = new StringBuilder();
-            string therapist = string.Format("{0} {1} (Occupational Therapist) ", Excel.Cell("Configuration", "B2").StringValue,Excel.Cell("Configuration", "B3").StringValue);
-            string client = string.Format("{0} (Client) ", Excel.Cell(SectionName, "B2").StringValue);
-            sb.AppendLine(therapist);
-            sb.AppendLine(client);
-            return sb.ToString();
-
-
-        }
+       
 
         private int GetAge(double doubleValue)
         {

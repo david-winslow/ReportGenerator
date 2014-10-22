@@ -6,12 +6,12 @@ namespace OTS
     {
         protected override string SectionName
         {
-            get { return "Purposes"; }
+            get { return "Purpose of report"; }
         }
 
         public override Func<Excel, object> ReportData
         {
-            get { return e => new {Purposes = e.SelectedValuesList("A2", "B20"),Counter.I}; }
+            get { return e => new {Purposes = e.GetSelected<SelectedValue>("purposes"),Counter.I}; }
         }
     }
 }

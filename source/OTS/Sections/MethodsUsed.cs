@@ -2,10 +2,10 @@ using System;
 
 namespace OTS
 {
-    public class SelectedValue
+    public class SelectedValue :Selectable
     {
-        public string Bullet { get; set; }
-        public string Selected { get; set; }
+        public string Text { get; set; }
+        
     }
 
     public class MethodsUsed : Section
@@ -17,7 +17,7 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return excel => new {L = Excel.SelectedValuesList("A2", "B60"),Counter.I}; }
+            get { return excel => new { L = Excel.GetSelected<SelectedValue>("methods_used"), Counter.I }; }
         }
     }
 }
