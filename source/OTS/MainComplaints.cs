@@ -7,11 +7,6 @@ namespace OTS
 {
     public class MainComplaints :Section
     {
-
-        private class List
-        {
-            public string Text { get; set; }
-        }
         protected override string SectionName
         {
             get { return "Main complaints"; }
@@ -19,7 +14,7 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return e => new { List = e.Get<List>("MC").Where(b => !b.Text.IsNullOrEmpty()), Counter.I }; }
+            get { return e => new { L = e.GetSelected("MainComplaintsList"), Counter.I }; }
         }
     }
 }

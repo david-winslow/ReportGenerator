@@ -25,7 +25,10 @@ namespace OTS
             string bookmark_Path = Path.Combine(_wordSectionsPath, sectionname + _wordExtention);
 
             var bookList = new List<string>() { bookmark_Template_Therapist_Path, bookmark_Therapist_Path, bookmark_Template_Path, bookmark_Path };
-            return bookList.Where(File.Exists).First();
+
+            string sectionPath = bookList.Where(File.Exists).FirstOrDefault();
+            if(sectionPath == null) throw  new FileNotFoundException(string.Format("'{0}' not found", sectionname));
+            return sectionPath;
         }
     }
 

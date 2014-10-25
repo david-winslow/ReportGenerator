@@ -45,12 +45,12 @@ namespace OTS
             return result.ToList();
         }
        
-        public List<T> GetSelected<T>(string start, string end) where T:ISelectable
+        public List<T> GetSelected<T>(string namedRange) where T:Selectable
         {
-            var result = from p in _linq2Excel.WorksheetRange<T>(start, end, DefaultWorkSheetName)
+            var result = from p in _linq2Excel.NamedRange<T>(namedRange)
                          where !p.Selected.IsNullOrEmpty()
                          select p;
-            return result.ToList();
+            return PlaceHolders.Replace<T>(result.ToList());
         }
         public List<SelectedValue> GetSelected(string namedRange)
         {
@@ -107,9 +107,16 @@ namespace OTS
             _workbook.Save(File.Create("clean_input.xlsx"),SaveFormat.Auto);
         }
     }
-    public class Selectable:ISelectable
+
+    public interface IText
+    {
+        string Text { get; set; }
+    }
+
+    public class Selectable:ISelectable,IText
     {
         public string Selected { get; set; }
+        public string Text { get; set; }
     }
 
     public interface ISelectable

@@ -132,6 +132,7 @@
     <Compile Include="ADL.cs" />
     <Compile Include="BootStrapper.cs" />
     <Compile Include="BulletList.cs" />
+    <Compile Include="CognitiveResult.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="GeneralObservations.cs" />
     <Compile Include="GoogleFileService.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="LocalGSheet.cs" />
     <Compile Include="MainComplaints.cs" />
     <Compile Include="PainReport.cs" />
+    <Compile Include="PhysicalObservations.cs" />
     <Compile Include="RiverMeadTestItem.cs" />
     <Compile Include="Safety.cs" />
     <Compile Include="Sections\AssessmentInformation.cs" />

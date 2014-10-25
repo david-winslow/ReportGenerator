@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Castle.Core.Internal;
 
 namespace OTS
 {
@@ -35,7 +36,7 @@ namespace OTS
 
         public string Replace(string input)
         {
-            return (input.Contains(TagName)) ? input.Replace(TagName, _list[Randomizer.Next(0, _list.Count)]) : input;
+            return (!input.IsNullOrEmpty() && input.Contains(TagName)) ? input.Replace(TagName, _list[Randomizer.Next(0, _list.Count)]) : input;
         }
     }
 
@@ -44,8 +45,6 @@ namespace OTS
         private class Item :Selectable
         {
             public string Activity { get; set; }
-            public string Present { get; set; }
-
         }
 
         protected override string SectionName
@@ -57,8 +56,8 @@ namespace OTS
         {
             get { return e =>
             {
-                List<Item> items = e.GetSelected<Item>("A1","C60");
-                return new {List = items, Counter.I};
+                List<Item> items = e.GetSelected<Item>("ADL_List");
+                return new {L = items, Counter.I};
             }; }
         }
        

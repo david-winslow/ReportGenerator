@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Aspose.Words.Lists;
 using Castle.Core.Internal;
+using Castle.MicroKernel.ModelBuilder.Descriptors;
 
 namespace OTS
 {
@@ -31,6 +32,15 @@ namespace OTS
             List<SelectedValue> result = new List<SelectedValue>();
             input.ForEach(s => result.Add(new SelectedValue(){Text = Replace(s.Text), Selected = s.Selected}));
             return result;
+        }
+
+        public static List<T> Replace<T>(List<T> input) where T:Selectable
+        {
+            for (int i = 0; i < input.Count -1; i++)
+            {
+                input[i].Text = Replace(input[i].Text);
+            }  
+            return input;
         }
 
 

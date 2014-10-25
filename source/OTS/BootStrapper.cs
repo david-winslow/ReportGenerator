@@ -58,6 +58,9 @@ namespace OTS
             container.Register(Component.For<IReportElement>().ImplementedBy<ConsistencyOfPerformance>().LifestyleTransient().Forward<ConsistencyOfPerformance>());
             container.Register(Component.For<IReportElement>().ImplementedBy<PainReport>().LifestyleTransient().Forward<PainReport>());
             container.Register(Component.For<IReportElement>().ImplementedBy<Safety>().LifestyleTransient().Forward<Safety>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<PhysicalObservations>().LifestyleTransient().Forward<PhysicalObservations>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<CognitiveResult>().LifestyleTransient().Forward<CognitiveResult>());
+            container.Register(Component.For<IReportElement>().ImplementedBy<PhychoSocialResult>().LifestyleTransient().Forward<PhychoSocialResult>());
 
             container.Register(Component.For<IReportElement>().ImplementedBy<AssessmentResults>().LifestyleTransient().Forward<AssessmentResults>());
             container.Register(Component.For<IReportElement>().ImplementedBy<Musculoskeletal>().LifestyleTransient().Forward<Musculoskeletal>());
@@ -69,7 +72,6 @@ namespace OTS
             container.Register(Component.For<IReportElement>().ImplementedBy<AbiltiesLimitations>().LifestyleTransient().Forward<AbiltiesLimitations>());
             container.Register(Component.For<IReportElement>().ImplementedBy<JobAnalysis>().LifestyleTransient().Forward<JobAnalysis>());
 
-            container.Register(Component.For<IReportElement>().ImplementedBy<CognitivePhychoSocialResult>().LifestyleTransient().Forward<CognitivePhychoSocialResult>());
             container.Register(Component.For<IReportElement>().ImplementedBy<Thurstone>().LifestyleTransient().Forward<Thurstone>());
             container.Register(Component.For<IReportElement>().ImplementedBy<RiverMeadTest>().LifestyleTransient().Forward<RiverMeadTest>());
             container.Register(Component.For<IReportElement>().ImplementedBy<Cam>().LifestyleTransient().Forward<Cam>());
@@ -184,7 +186,7 @@ namespace OTS
 
     public class AbiltiesLimitations:Section
     {
-        public class Item :Selectable
+        public class Item :Selectable,IText
         {
             public string Text { get; set; }
             
@@ -197,7 +199,7 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return e => new {A = e.GetSelected<Item>("A2", "B20"), L = e.GetSelected<Item>("C2", "D20"),Counter.I, II = Counter.I}; }
+            get { return e => new {A = e.GetSelected<Item>(""), L = e.GetSelected<Item>(""),Counter.I, II = Counter.I}; }
         }
     }
 
@@ -472,24 +474,4 @@ namespace OTS
                         (sec > 0) ? string.Format("{0} seconds", sec) : string.Empty);
         }
     }
-
-    public class CognitivePhychoSocialResult:Section
-    {
-        private class List
-        {
-            public string Aspect { get; set; }
-            public string Comment { get; set; }
-        }
-        protected override string SectionName
-        {
-            get { return "Cognitive phychosocial results"; }
-        }
-
-        public override Func<Excel, object> ReportData
-        {
-            get { return e => new { Cognitive = e.Get<List>("A2", "B20"), Psychosocial = e.Get<List>("D2", "E20"), Counter.I }; }
-        }
-    } 
-    
-   
 }
