@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Aspose.Words;
 using Castle.Core;
 using Castle.Core.Internal;
 using Castle.MicroKernel.Registration;
@@ -106,12 +107,20 @@ namespace OTS.Tests
          }        
 
         [Test]
-        public void test()
+        public void SingleSectionTest()
         {
             SetupTestFileService();
-            IoC.Get<OccupationalHistory>().Execute();
+            IoC.Get<ADL>().Execute();
             IoC.Get<CleanUp>().Execute();
             Process.Start(config.WordReportFile);
+        }
+
+        [Test]
+        public void settemplate()
+        {
+            SetupTestFileService();
+            var word = IoC.Get<Word>();
+            word.SetTemplatePathForAllSections();
         }
 
         [Test]

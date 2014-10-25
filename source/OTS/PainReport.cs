@@ -2,16 +2,16 @@ using System;
 
 namespace OTS
 {
-    public class MethodsUsed : Section
+    public class PainReport : Section
     {
         protected override string SectionName
         {
-            get { return "Methods used"; }
+            get { return "Pain report"; }
         }
 
         public override Func<Excel, object> ReportData
         {
-            get { return excel => new { L = Excel.GetSelected("methods_used"), Counter.I }; }
+            get { return e => new {Counter.I, L = e.GetSelected("PainList")}; }
         }
     }
 }

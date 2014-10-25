@@ -15,29 +15,6 @@ namespace OTS
         }
     }
 
-    public class Safety : BulletList
-    {
-        protected override string SectionName
-        {
-            get { return "Safety"; }
-        }
-    }
-
-    public class PainReport : BulletList
-    {
-        protected override string SectionName
-        {
-            get { return "Pain report"; }
-        }
-    }
-
-    public class GeneralObservations : BulletList
-    {
-        protected override string SectionName
-        {
-            get { return "General observations"; }
-        }
-    }
 
     public class CooperationEffort : BulletList
     {
@@ -47,11 +24,16 @@ namespace OTS
         }
     }
 
-    public class ConsistencyOfPerformance : BulletList
+    public class ConsistencyOfPerformance : Section
     {
         protected override string SectionName
         {
             get { return "Consistency performance"; }
+        }
+
+        public override Func<Excel, object> ReportData
+        {
+            get { return e => new {Counter.I, Intro = e["CPIntro"], L = e.GetSelected("ConsistencyPerformance")}; }
         }
     }
 }

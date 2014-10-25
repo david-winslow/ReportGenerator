@@ -11,7 +11,8 @@ namespace OTS
 
         public override Func<Excel, object> ReportData
         {
-            get { return e => new {Purposes = e.GetSelected<SelectedValue>("purposes"),Counter.I}; }
+            get { return e => new {Purposes = e.GetSelected("purposes"),Counter.I}; }
         }
     }
+ 
 }

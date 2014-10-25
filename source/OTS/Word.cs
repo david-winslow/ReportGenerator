@@ -1,6 +1,10 @@
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using Aspose.Cells;
 using Aspose.Words;
+using Aspose.Words.Fonts;
+using SaveFormat = Aspose.Words.SaveFormat;
 
 namespace OTS
 {
@@ -65,5 +69,32 @@ namespace OTS
             documentBuilder.InsertImage(stream);
             Save();
         }
+
+        public void SetTemplatePathForAllSections()
+        {
+            string[] files = Directory.GetFiles(@"C:\googledrive\templates\Sections","*.docx");
+            foreach (var file in files)
+            {
+                try
+                {
+
+
+
+                    var document = new Document(file);
+                    document.AttachedTemplate = @"C:\googledrive\templates\Sections\SectionTemplate.dotx";
+                    document.AutomaticallyUpdateSyles = true;
+                    document.Save(file);
+                    Console.WriteLine(file);
+                }
+                catch (Exception exc)
+                {
+
+                    Console.WriteLine(string.Format("error: {0}", file));
+                    continue;
+                }
+            }
+        }
+
+     
     }
 }

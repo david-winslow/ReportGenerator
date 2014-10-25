@@ -44,7 +44,7 @@ namespace OTS
                          select p;
             return result.ToList();
         }
-
+       
         public List<T> GetSelected<T>(string start, string end) where T:ISelectable
         {
             var result = from p in _linq2Excel.WorksheetRange<T>(start, end, DefaultWorkSheetName)
@@ -52,18 +52,20 @@ namespace OTS
                          select p;
             return result.ToList();
         }
-        public List<T> GetSelected<T>(string namedRange) where T : ISelectable
+        public List<SelectedValue> GetSelected(string namedRange)
         {
-            var result = from p in _linq2Excel.NamedRange<T>(namedRange)
-                         where !p.Selected.IsNullOrEmpty()
-                         select p;
-            return result.ToList();
+            var result = from p in _linq2Excel.NamedRange<SelectedValue>(namedRange)
+                where !p.Selected.IsNullOrEmpty()
+                select p;
+           return  PlaceHolders.Replace(result);
         }
+
+      
 
 
         public string this[string name]
         {
-            get { return Cell(name).StringValue; }
+            get { return PlaceHolders.Replace(Cell(name).StringValue); }
         }
 
         public Cell Cell(string workSheetName, string name)

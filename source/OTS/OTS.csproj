@@ -129,14 +129,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ADL.cs" />
     <Compile Include="BootStrapper.cs" />
     <Compile Include="BulletList.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="GeneralObservations.cs" />
     <Compile Include="GoogleFileService.cs" />
     <Compile Include="IFileService.cs" />
+    <Compile Include="IPlaceHolder.cs" />
     <Compile Include="LocalGSheet.cs" />
     <Compile Include="MainComplaints.cs" />
+    <Compile Include="PainReport.cs" />
     <Compile Include="RiverMeadTestItem.cs" />
+    <Compile Include="Safety.cs" />
     <Compile Include="Sections\AssessmentInformation.cs" />
     <Compile Include="CleanUp.cs" />
     <Compile Include="Sections\Background.cs" />
@@ -153,6 +158,7 @@
     <Compile Include="Sections\PurposeOfReport.cs" />
     <Compile Include="ReportGenerator.cs" />
     <Compile Include="Sections\Section.cs" />
+    <Compile Include="Sections\SelectedValue.cs" />
     <Compile Include="Word.cs" />
   </ItemGroup>
   <ItemGroup>

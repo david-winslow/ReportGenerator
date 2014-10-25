@@ -26,6 +26,8 @@ namespace OTS
            
             WindsorContainer container = new WindsorContainer();
             components.ForEach(x => container.Register(x));
+            
+          
             container.Register(Component.For<Excel>()
                 .LifestyleSingleton()
                 .DependsOn(Dependency.OnValue("inputFile", config.ExcelInputFile)));
@@ -39,7 +41,7 @@ namespace OTS
                 .LifestyleSingleton()
                 .DependsOn(Dependency.OnValue("wordSectionsPath", config.WordSectionsPath)));
             container.Register(Component.For<Config>().ImplementedBy<Config>().LifestyleTransient().Forward<Config>());
-
+            container.Register(Component.For<IPlaceHolder>().ImplementedBy<ClientNamePlaceHolder>().LifestyleSingleton());
             //Section elements
             container.Register(Component.For<IReportElement>().ImplementedBy<LetterHead>().LifestyleTransient().Forward<LetterHead>());
             container.Register(Component.For<IReportElement>().ImplementedBy<AssessmentInformation>().LifestyleTransient().Forward<AssessmentInformation>()); 
@@ -47,11 +49,11 @@ namespace OTS
             container.Register(Component.For<IReportElement>().ImplementedBy<MethodsUsed>().LifestyleTransient().Forward<MethodsUsed>());
             container.Register(Component.For<IReportElement>().ImplementedBy<DocumentationReceived>().LifestyleTransient().Forward<DocumentationReceived>());
             container.Register(Component.For<IReportElement>().ImplementedBy<MedicalInformation>().LifestyleTransient().Forward<MedicalInformation>());
-            container.Register(Component.For<IReportElement>().ImplementedBy<Background>().LifestyleTransient().Forward<Background>());
             container.Register(Component.For<IReportElement>().ImplementedBy<OccupationalHistory>().LifestyleTransient().Forward<OccupationalHistory>());
 
             container.Register(Component.For<IReportElement>().ImplementedBy<MainComplaints>().LifestyleTransient().Forward<MainComplaints>());
             container.Register(Component.For<IReportElement>().ImplementedBy<GeneralObservations>().LifestyleTransient().Forward<GeneralObservations>());
+
             container.Register(Component.For<IReportElement>().ImplementedBy<CooperationEffort>().LifestyleTransient().Forward<CooperationEffort>());
             container.Register(Component.For<IReportElement>().ImplementedBy<ConsistencyOfPerformance>().LifestyleTransient().Forward<ConsistencyOfPerformance>());
             container.Register(Component.For<IReportElement>().ImplementedBy<PainReport>().LifestyleTransient().Forward<PainReport>());
@@ -199,42 +201,6 @@ namespace OTS
         }
     }
 
-
-    public class ADL:Section
-    {
-        private class Item :Selectable
-        {
-            public string Activity { get; set; }
-            public string Present { get; set; }
-
-        }
-
-        protected override string SectionName
-        {
-            get { return "ADL"; }
-        }
-
-        public override Func<Excel, object> ReportData
-        {
-            get { return e =>
-            {
-                List<Item> items = e.GetSelected<Item>("A1", "C70");
-                items.ForEach(i => i.Present= i.Present.Replace("[[Client]]",RandomClientNames(e.Cell("ClientSurname").StringValue,e.Cell("ClientTitle").StringValue,e.Cell("ClientGender").StringValue.ToLower())));
-                return new {List = items, Counter.I};
-            }; }
-        }
-        static Random Random = new Random();
-        private string RandomClientNames(string lastName, string title, string gender)
-        {
-            var l = new List<string>
-            {
-                string.Format("{0}. {1}", title, lastName),
-                (gender == "male" ? "He" : "She"),
-                "The Client"
-            };
-            return l[Random.Next(0, l.Count)];
-        }
-    }
 
     public abstract class TextSection : Section
     {

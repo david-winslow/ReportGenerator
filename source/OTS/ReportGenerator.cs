@@ -14,7 +14,7 @@ namespace OTS
                 fileService.ProcessFile();
                 var result = from element in IoC.GetAll<IReportElement>()
                     select element;
-                result.ToList().ForEach(e => GetValue(e));
+                result.ToList().ForEach(GetValue);
             }
         }
 
